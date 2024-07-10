@@ -74,5 +74,12 @@
     <string name="borrow_book">Borrow Book</string>
     <string name="More">More</string>
     <string name="bookThumbnail">book</string>
+    <string name="search1">Search</string>
+    <string name="book_title">Book Title</string>
+    <string name="book_author">Book Author</string>
+    <string name="trending_book">Trending Books</string>
+    <string name="new_release">New Releases</string>
+    <string name="book_description" />
+    <string name="book_price" />
 
 </resources>

@@ -28,7 +28,7 @@ public class sign_in extends AppCompatActivity {
     private TextView loginTextView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private DatabaseReference dbRef;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class sign_in extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        dbRef = FirebaseDatabase.getInstance().getReference("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         emailEditText = findViewById(R.id.Email);
         usernameEditText = findViewById(R.id.Username);
@@ -97,7 +97,6 @@ public class sign_in extends AppCompatActivity {
         } else if (!isValidPassword(password)) {
             passwordEditText.setError("Password should be a combination of numbers and letters");
             isValid = false;
-            // Display toast message for password requirement
             Toast.makeText(sign_in.this, "Password should be a combination of numbers and letters", Toast.LENGTH_SHORT).show();
         }
 
@@ -123,7 +122,6 @@ public class sign_in extends AppCompatActivity {
             } else if (Character.isDigit(c)) {
                 hasDigit = true;
             }
-            // Early exit if both conditions are satisfied
             if (hasLetter && hasDigit) {
                 return true;
             }
@@ -135,27 +133,24 @@ public class sign_in extends AppCompatActivity {
     private void signUp() {
         final String email = emailEditText.getText().toString().trim();
         final String username = usernameEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
+        final String password = passwordEditText.getText().toString().trim();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign up success, save user details to Firestore and Realtime Database
-                            saveUserDetails(email, username);
+                            saveUserDetails(email, username, password);
                         } else {
-                            // If sign up fails, display a message to the user.
-                            Toast.makeText(sign_in.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(sign_in.this, "Sign Up Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    private void saveUserDetails(String email, String username) {
-        String userId = mAuth.getCurrentUser().getUid();
-        Map<String, Object> user = new HashMap<>();
+    private void saveUserDetails(final String email, final String username, final String password) {
+        final String userId = mAuth.getCurrentUser().getUid();
+        final Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("username", username);
 
@@ -166,28 +161,29 @@ public class sign_in extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(sign_in.this, "User details saved.", Toast.LENGTH_SHORT).show();
+                            // Save to Realtime Database
+                            mDatabase.child("users").child(userId).setValue(user)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(sign_in.this, "Sign Up Successful.", Toast.LENGTH_SHORT).show();
+                                                navigateToLogin();
+                                            } else {
+                                                Toast.makeText(sign_in.this, "Failed to save user details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                         } else {
-                            Toast.makeText(sign_in.this, "Sign Up Failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(sign_in.this, "Failed to save user details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
 
-        // Save to Realtime Database
-        dbRef.child(userId).setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(sign_in.this, "Sign Up Successful.", Toast.LENGTH_SHORT).show();
-                            // Redirect to home activity after saving user details
-                            Intent intent = new Intent(sign_in.this, login.class);
-                            startActivity(intent);
-                            finish(); // Optional, to close the sign_in activity
-                        } else {
-                            Toast.makeText(sign_in.this, "Failed to save user details to Realtime Database.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    private void navigateToLogin() {
+        Intent intent = new Intent(sign_in.this, login.class);
+        startActivity(intent);
+        finish();
     }
 }

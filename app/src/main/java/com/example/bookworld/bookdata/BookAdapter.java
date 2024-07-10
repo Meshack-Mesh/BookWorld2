@@ -1,5 +1,7 @@
 package com.example.bookworld.bookdata;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookworld.BookDetails;
+import com.example.bookworld.Home;
 import com.example.bookworld.R;
-import com.example.bookworld.bookdata.Book;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -18,9 +21,11 @@ import java.util.List;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
     private List<Book> bookList;
+    private Context context;
 
-    public BookAdapter(List<Book> bookList) {
+    public BookAdapter(List<Book> bookList, Context context) {
         this.bookList = bookList;
+        this.context = context;
     }
 
     @NonNull
@@ -34,7 +39,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         Book book = bookList.get(position);
         holder.title.setText(book.getTitle());
+        holder.author.setText(book.getAuthor());
         Picasso.get().load(book.getThumbnailUrl()).into(holder.thumbnail);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create intent to start BookDetailsActivity
+                Intent intent = new Intent(context, BookDetails.class);
+                intent.putExtra("BOOK_ID", book.getId());
+                intent.putExtra("BOOK_TITLE", book.getTitle());
+                intent.putExtra("BOOK_AUTHOR", book.getAuthor());
+                intent.putExtra("BOOK_DESCRIPTION", book.getDescription());
+                intent.putExtra("BOOK_PRICE", book.getPrice());
+                intent.putExtra("BOOK_THUMBNAIL", book.getThumbnailUrl());
+                intent.putExtra("BOOK_RATING", book.getRating());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -42,14 +64,23 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         return bookList.size();
     }
 
-    class BookViewHolder extends RecyclerView.ViewHolder {
+    public void setOnBookClickListener(Home home) {
+
+    }
+
+    public interface OnBookClickListener {
+    }
+
+    static class BookViewHolder extends RecyclerView.ViewHolder {
         ImageView thumbnail;
         TextView title;
+        TextView author;
 
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.bookThumbnail);
             title = itemView.findViewById(R.id.bookTitle);
+            author = itemView.findViewById(R.id.bookAuthor);
         }
     }
 }

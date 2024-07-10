@@ -16,6 +16,18 @@
         android:theme="@style/Theme.BookWorld"
         tools:targetApi="31">
         <activity
+            android:name=".BorrowPage"
+            android:exported="false" />
+        <activity
+            android:name=".BookDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Admindashboard"
+            android:exported="false" />
+        <activity
+            android:name=".adminLogin"
+            android:exported="false" />
+        <activity
             android:name=".Fiction"
             android:exported="false" />
         <activity
@@ -36,18 +48,18 @@
         <activity
             android:name=".LendBooksActivity"
             android:exported="false" />
-        <activity
-            android:name=".BorrowBook"
-            android:exported="false" />
+
         <activity
             android:name=".AddBookActivity"
             android:exported="false" />
         <activity
             android:name=".Business"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".History"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".More"
             android:exported="false" />
@@ -59,25 +71,31 @@
             android:exported="false" />
         <activity
             android:name=".Art"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".HealthSciences"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".comics"
             android:exported="false" />
         <activity
             android:name=".Technology"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".animation"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".fantasy"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".search_discovery"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".Account_Settings"
             android:exported="false" />

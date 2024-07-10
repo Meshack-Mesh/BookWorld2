@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="129dp"
+            android:layout_marginTop="135dp"
             android:padding="35dp">
 
             <LinearLayout
@@ -52,7 +52,7 @@
 
                 <EditText
                     android:id="@+id/otpDigit1"
-                    android:layout_width="40dp"
+                    android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="1"
@@ -62,7 +62,7 @@
 
                 <EditText
                     android:id="@+id/otpDigit2"
-                    android:layout_width="40dp"
+                    android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="1"
@@ -73,7 +73,7 @@
 
                 <EditText
                     android:id="@+id/otpDigit3"
-                    android:layout_width="40dp"
+                    android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="1"
@@ -84,7 +84,27 @@
 
                 <EditText
                     android:id="@+id/otpDigit4"
-                    android:layout_width="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/square"/>
+                <EditText
+                    android:id="@+id/otpDigit5"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/square"/>
+                <EditText
+                    android:id="@+id/otpDigit6"
+                    android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="1"
@@ -94,12 +114,21 @@
                     android:background="@drawable/square"/>
 
             </LinearLayout>
+            <TextView
+                android:id="@+id/resend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="Resend"
+                android:textSize="13sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/buttonVerify"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="18dp"
                 android:layout_gravity="center"
                 android:padding="8dp"
                 android:textSize="29sp"

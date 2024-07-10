@@ -29,7 +29,7 @@ public class login extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
-    private TextView signUpTextView, forgotPasswordTextView;
+    private TextView signUpTextView, forgotPasswordTextView, Adminlogin;
     private CheckBox showPasswordCheckBox;
     private FirebaseAuth mAuth;
     private DatabaseReference dbRef;
@@ -46,6 +46,7 @@ public class login extends AppCompatActivity {
         passwordEditText = findViewById(R.id.Password);
         loginButton = findViewById(R.id.buttonLogin);
         signUpTextView = findViewById(R.id.CreateAccount);
+        Adminlogin = findViewById(R.id.AdminLogin);
         forgotPasswordTextView = findViewById(R.id.ForgotPassword);
         showPasswordCheckBox = findViewById(R.id.checkBoxShowPassword);
 
@@ -62,6 +63,14 @@ public class login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(login.this, sign_in.class);
+                startActivity(intent);
+            }
+        });
+
+        Adminlogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(login.this, adminLogin.class);
                 startActivity(intent);
             }
         });

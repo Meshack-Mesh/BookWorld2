@@ -3,6 +3,7 @@ package com.example.bookworld;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -24,6 +25,8 @@ public class MainActivity2 extends AppCompatActivity {
         LinearLayout moreLayout = findViewById(R.id.moreart);
         ImageView threeDotButton = findViewById(R.id.threeDotButton);
         ImageView backButton = findViewById(R.id.backButton);
+        Button buttonLend = findViewById(R.id.btnLendBook);
+        Button buttonBorrow = findViewById(R.id.btnBorrowBook);
         // Ensure this ID matches your XML
 
         // Set onClick listeners
@@ -31,6 +34,20 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( MainActivity2.this, Home.class);
+                startActivity(intent);
+            }
+        });
+       buttonLend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( MainActivity2.this, LendBookActivity.class);
+                startActivity(intent);
+            }
+        });
+        buttonBorrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( MainActivity2.this, BookDetails.class);
                 startActivity(intent);
             }
         });
@@ -98,7 +115,7 @@ public class MainActivity2 extends AppCompatActivity {
         findViewById(R.id.btnBorrowBook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity2.this, BorrowBook.class);
+                Intent intent = new Intent(MainActivity2.this, BookDetails.class);
                 startActivity(intent);
             }
         });

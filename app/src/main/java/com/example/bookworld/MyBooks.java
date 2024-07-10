@@ -3,7 +3,6 @@ package com.example.bookworld;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -23,7 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyBooks extends AppCompatActivity {
+public class MyBooks extends AppCompatActivity implements BookAdapter.OnBookClickListener {
 
     private RecyclerView recyclerView;
     private BookAdapter adapter;
@@ -41,23 +40,13 @@ public class MyBooks extends AppCompatActivity {
 
         // Initialize RecyclerView and adapter
         recyclerView = findViewById(R.id.recyclerViewBooks);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bookList = new ArrayList<>();
-        adapter = new BookAdapter(bookList);
+        adapter = new BookAdapter(bookList, this); // Pass this activity as the OnBookClickListener
         recyclerView.setAdapter(adapter);
 
         // Retrieve books from Firestore
-        retrieveBooks();
-
-        // Button to move to AddBookActivity
-        Button addBookButton = findViewById(R.id.addBookbutton);
-        addBookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MyBooks.this, AddBookActivity.class);
-                startActivity(intent);
-            }
-        });
+        fetchBooksFromFirestore();
 
         // Set onClick listeners for bottom navigation
         LinearLayout homeLayout = findViewById(R.id.homelayout);
@@ -65,6 +54,9 @@ public class MyBooks extends AppCompatActivity {
         LinearLayout searchLayout = findViewById(R.id.searchLayout);
         LinearLayout moreLayout = findViewById(R.id.moreLayout);
         ImageView threeDotButton = findViewById(R.id.threeDotButton);
+        ImageView backButton = findViewById(R.id.backButton);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         myBooksLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +71,8 @@ public class MyBooks extends AppCompatActivity {
                 Intent intent = new Intent(MyBooks.this, Home.class);
                 startActivity(intent);
             }
+        });
 
-    });
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,23 +96,46 @@ public class MyBooks extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Finish the current activity to go back to the previous one
+                finish();
+            }
+        });
     }
 
-    private void retrieveBooks() {
-        db.collection("books")
+    private void fetchBooksFromFirestore() {
+        db.collection("Fantasy")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            bookList.clear(); // Clear the list before adding new items
+                            // Inside fetchBooksFromFirestore method, where you create a Book object
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId(); // Assuming the document ID can be used as the book ID
                                 String thumbnailUrl = document.getString("thumbnailUrl");
                                 String title = document.getString("title");
+                                String author = document.getString("author");
+                                String description= document.getString("description");
+                                String price = document.getString("price");
+
+                                float rating = 0.0f; // Default value if not found or conversion fails
+                                Object ratingObj = document.get("rating");
+                                if (ratingObj instanceof Double) {
+                                    rating = ((Double) ratingObj).floatValue();
+                                } else if (ratingObj instanceof Float) {
+                                    rating = (Float) ratingObj;
+                                }
 
                                 // Create a Book object and add it to the list
-                                Book book = new Book(thumbnailUrl, title);
+                                Book book = new Book(id, thumbnailUrl, title, author, description, price, rating);
                                 bookList.add(book);
                             }
+
                             // Notify the adapter that the data set has changed
                             adapter.notifyDataSetChanged();
                         } else {
@@ -128,5 +143,14 @@ public class MyBooks extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+
+    public void onBookClick(Book book) {
+        // Handle click events on books here (if needed)
+        // For example, open a detailed view of the book
+        Intent intent = new Intent(MyBooks.this, BookDetails.class);
+        intent.putExtra("book_id", book.getId());
+        startActivity(intent);
     }
 }

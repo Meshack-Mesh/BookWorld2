@@ -2,6 +2,7 @@ package com.example.bookworld;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,10 +23,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity implements BookAdapter.OnBookClickListener {
 
-    private RecyclerView recyclerTrendingBooks;
-    private RecyclerView recyclerNewReleases;
     private FirebaseFirestore db;
     private BookAdapter trendingAdapter;
     private BookAdapter newReleasesAdapter;
@@ -42,8 +41,8 @@ public class Home extends AppCompatActivity {
         LinearLayout searchLayout = findViewById(R.id.searchbutton);
         LinearLayout moreLayout = findViewById(R.id.morelayout);
         ImageView threeDotButton = findViewById(R.id.three_dotButton); // Ensure this ID matches your XML
-        recyclerTrendingBooks = findViewById(R.id.recyclerTrendingBooks);
-        recyclerNewReleases = findViewById(R.id.recyclerNewReleases);
+        RecyclerView recyclerTrendingBooks = findViewById(R.id.recyclerTrendingBooks);
+        RecyclerView recyclerNewReleases = findViewById(R.id.recyclerNewReleases);
         db = FirebaseFirestore.getInstance();
 
         recyclerTrendingBooks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -52,17 +51,11 @@ public class Home extends AppCompatActivity {
         trendingBooksList = new ArrayList<>();
         newReleasesList = new ArrayList<>();
 
-        trendingAdapter = new BookAdapter(trendingBooksList);
-        newReleasesAdapter = new BookAdapter(newReleasesList);
+        trendingAdapter = new BookAdapter(trendingBooksList, this);
+        newReleasesAdapter = new BookAdapter(newReleasesList, this);
 
         recyclerTrendingBooks.setAdapter(trendingAdapter);
         recyclerNewReleases.setAdapter(newReleasesAdapter);
-
-        // Retrieve trending books from Firestore
-        retrieveTrendingBooks();
-
-        // Retrieve new releases from Firestore
-        retrieveNewReleases();
 
         // Set onClick listeners
         myBooksLayout.setOnClickListener(new View.OnClickListener() {
@@ -96,51 +89,102 @@ public class Home extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Set click listener for BookAdapters
+        trendingAdapter.setOnBookClickListener(this);
+        newReleasesAdapter.setOnBookClickListener(this);
+
+        // Retrieve trending books from Firestore
+        retrieveTrendingBooks();
+
+        // Retrieve new releases from Firestore
+        retrieveNewReleases();
+    }
+
+    public void onBookClick(Book book) {
+        Intent intent = new Intent(Home.this, BookDetails.class);
+        intent.putExtra("BOOK_ID", book.getId());
+        intent.putExtra("BOOK_TITLE", book.getTitle());
+        intent.putExtra("BOOK_AUTHOR", book.getAuthor());
+        intent.putExtra("BOOK_DESCRIPTION", book.getDescription());
+        intent.putExtra("BOOK_PRICE", book.getPrice());
+        intent.putExtra("BOOK_THUMBNAIL", book.getThumbnailUrl());
+        intent.putExtra("BOOK_RATING", book.getRating());
+        startActivity(intent);
     }
 
     private void retrieveTrendingBooks() {
-        db.collection("books")
+        db.collection("Non-fiction")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
                                 String thumbnailUrl = document.getString("thumbnailUrl");
                                 String title = document.getString("title");
+                                String author = document.getString("author");
+                                String description = document.getString("description");
+                                String price = document.getString("price");
+
+                                float rating = 0.0f; // Default value if not found or conversion fails
+                                Object ratingObj = document.get("rating");
+                                if (ratingObj instanceof Double) {
+                                    rating = ((Double) ratingObj).floatValue();
+                                } else if (ratingObj instanceof Float) {
+                                    rating = (Float) ratingObj;
+                                }
 
                                 // Create a Book object and add it to the trending books list
-                                Book book = new Book(thumbnailUrl, title);
+                                Book book = new Book(id, thumbnailUrl, title, author, description, price, rating);
                                 trendingBooksList.add(book);
                             }
                             // Notify the adapter that the data set has changed
                             trendingAdapter.notifyDataSetChanged();
                         } else {
                             // Handle errors
+                            // Log the error message
+                            // Show an error message to the user
+                            Log.e("FirestoreError", "Error getting trending books: ", task.getException());
                         }
                     }
                 });
     }
 
     private void retrieveNewReleases() {
-        db.collection("books")
+        db.collection("History")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
                                 String thumbnailUrl = document.getString("thumbnailUrl");
                                 String title = document.getString("title");
+                                String author = document.getString("author");
+                                String description = document.getString("description");
+                                String price = document.getString("price");
 
+                                float rating = 0.0f; // Default value if not found or conversion fails
+                                Object ratingObj = document.get("rating");
+                                if (ratingObj instanceof Double) {
+                                    rating = ((Double) ratingObj).floatValue();
+                                } else if (ratingObj instanceof Float) {
+                                    rating = (Float) ratingObj;
+                                }
                                 // Create a Book object and add it to the new releases list
-                                Book book = new Book(thumbnailUrl, title);
+                                Book book = new Book(id, thumbnailUrl, title, author, description, price, rating);
                                 newReleasesList.add(book);
                             }
                             // Notify the adapter that the data set has changed
                             newReleasesAdapter.notifyDataSetChanged();
                         } else {
                             // Handle errors
+                            // Log the error message
+                            // Show an error message to the user
+                            Log.e("FirestoreError", "Error getting new releases: ", task.getException());
                         }
                     }
                 });

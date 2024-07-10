@@ -8,31 +8,28 @@
     android:background="@drawable/blue_back">
 
     <TextView
+        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/find_books_onlne"
+        android:textSize="30sp"
+        android:text="@string/welcome_back"
         android:gravity="center"
-        android:textColor="@color/amber"
-        android:textSize="36sp"
-        android:layout_marginTop="19dp"/>
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/warm_orange"/>
 
-
-
-            <TextView
-                android:id="@+id/welcome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:text="@string/welcome_back"
-            android:gravity="center"
-            android:textStyle="bold"
-                android:layout_marginTop="153dp"
-            android:textColor="@color/warm_orange"/>
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/launcher"
+        android:id="@+id/imageView" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/welcome"
+            android:layout_below="@+id/imageView"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -149,6 +146,18 @@
                 android:padding="1dp"
                 />
 
+            <TextView
+                android:layout_marginTop="110dp"
+                android:id="@+id/AdminLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="Login As Administrator"
+                android:padding="1dp"
+                />
             </LinearLayout>
 
 
