@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
 
     <RelativeLayout
         android:id="@+id/top"
@@ -31,33 +32,55 @@
 
     </RelativeLayout>
 
-    <EditText
+
+    <TextView
+        android:id="@+id/nameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:id="@+id/etSearchBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search for a book" />
+        android:layout_below="@+id/top"
+        android:layout_marginTop="15dp"
+        android:text="Name:"
+        android:textStyle="bold"
+        android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/btnSearch"
+    <!-- Name input field -->
+    <EditText
+        android:background="@drawable/rectangle_shape"
+        android:padding="10dp"
+        android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SEARCH"
+        android:layout_below="@id/nameLabel"
+        android:layout_marginTop="5dp"
+        android:hint="Enter Your Name"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/daysLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameEditText"
+        android:layout_marginTop="20dp"
+        android:text="Select the Number of days to Borrow"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <!-- Number of days dropdown -->
+    <Spinner
+        android:id="@+id/daysSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/daysLabel"
         android:layout_marginTop="16dp" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSearchedBooks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/trendingBooksTextView"
-        android:layout_marginTop="8dp"/>
-
+    <!-- Submit button -->
     <Button
-        android:id="@+id/btnBorrow"
+        android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="BORROW"
-        android:layout_marginTop="16dp" />
+        android:layout_below="@id/daysSpinner"
+        android:layout_marginTop="16dp"
+        android:text="Submit" />
 
-</LinearLayout>
+</RelativeLayout>

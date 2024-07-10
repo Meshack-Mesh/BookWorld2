@@ -52,9 +52,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/top"
-        android:layout_marginStart="5dp"
+        android:layout_below="@id/top"
         android:layout_marginTop="10dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,23 +72,46 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="16dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewBooks"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <LinearLayout
+                    android:layout_width="390dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- RecyclerView for trending books -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewBooks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/borrowedBooksTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Borrowed Books"
+                android:textColor="@color/warm_orange"
+                android:textSize="20sp"
                 android:layout_below="@id/trendingBooksTextView"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"/>
+
+            <!-- RecyclerView for borrowed books -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerBorrowedBooks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/borrowedBooksTextView"
                 android:layout_marginTop="8dp"/>
 
-            <Button
-                android:id="@+id/addBookbutton"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:layout_gravity="center"
-                android:background="#FF9800"
-                android:textSize="25dp"
-                android:text="Add a Book"
-                android:textColor="@color/light_purple" />
         </LinearLayout>
     </ScrollView>
 
@@ -164,8 +187,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
-            tools:ignore="UseCompoundDrawables">
+            android:gravity="center">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"

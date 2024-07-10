@@ -353,7 +353,7 @@
                             android:padding="16dp">
 
                             <ImageView
-                                android:src="@drawable/health"
+                                android:src="@drawable/fantasy"
                                 android:layout_width="110dp"
                                 android:layout_height="60dp" />
 
@@ -432,7 +432,8 @@
                             android:padding="16dp">
 
                             <ImageView
-                                android:layout_width="110dp"
+                                android:src="@drawable/fiction"
+                                android:layout_width="180dp"
                                 android:layout_height="60dp" />
 
                             <TextView
@@ -464,7 +465,7 @@
                             android:padding="16dp">
 
                             <ImageView
-
+                                android:src="@drawable/icons_fiction"
                                 android:layout_width="130dp"
                                 android:layout_height="70dp" />
 
@@ -483,98 +484,108 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:background="@drawable/rectangle_top"
         android:padding="10dp">
 
+        <!-- Your LinearLayout for bottom navigation -->
         <LinearLayout
-            android:id="@+id/homelayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Bottom navigation items -->
+            <LinearLayout
+                android:id="@+id/homelayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/mybookslayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_home" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_books" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/mybookslayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="My Books"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/searchlayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_books" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Books"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/searchlayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Search"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/morelayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_search" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_more" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/morelayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="More"
-                android:textSize="12sp"
-                android:gravity="center" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_more" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="More"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+            </LinearLayout><!-- Repeat similar layouts for other items -->
+            <!-- Example: My Books, Search, More -->
+
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </RelativeLayout>

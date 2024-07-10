@@ -1,87 +1,208 @@
 package com.example.bookworld;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class fantasy extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.bookworld.bookdata.ArtAdapter;
+import com.example.bookworld.bookdata.Book;
+import com.example.bookworld.bookdata.BusinessAdapter;
+import com.example.bookworld.bookdata.FantasyAdapter;
+import com.example.bookworld.bookdata.TechnologyAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class fantasy extends AppCompatActivity implements FantasyAdapter.OnBookClickListener {
+
+    private FirebaseFirestore db;
+    private FantasyAdapter trendingAdapter;
+
+    private List<Book> bookList;
+    private EditText searchEditText;
+    private TextView searchButton;
+    private TextView messageTextView;
+    private ImageView backButton;
+    private ImageView threeDotsButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fantasy);
 
-        // Initialize LinearLayouts
-        LinearLayout homeLayout = findViewById(R.id.homefantasy);
-        LinearLayout myBooksLayout = findViewById(R.id.mybooksfantasy);
-        LinearLayout searchLayout = findViewById(R.id.searchfantasy);
-        LinearLayout moreLayout = findViewById(R.id.morefantasy);
-        ImageView backButton = findViewById(R.id.backButton);
+        // Initialize Firestore instance
+        db = FirebaseFirestore.getInstance();
+
+        // Initialize views
+        RecyclerView recyclerView = findViewById(R.id.recyclerfantasy);
+        searchEditText = findViewById(R.id.searchEditText);
+        searchButton = findViewById(R.id.searchButton);
+        messageTextView = findViewById(R.id.messageTextView);
+        backButton = findViewById(R.id.backButton);
+        threeDotsButton = findViewById(R.id.logoutButton);
+
+        // Setup RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)); // Set horizontal layout
+        bookList = new ArrayList<>();
+        trendingAdapter = new FantasyAdapter(bookList, this);
+        recyclerView.setAdapter(trendingAdapter);
+
+        // Retrieve book details from Firestore
+        retrieveBooks();
 
         // Set onClick listeners
-        homeLayout.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(fantasy.this, Home.class);
-                startActivity(intent);
-            }
-        });
-
-        myBooksLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(fantasy.this, MyBooks.class);
-                startActivity(intent);
-            }
-        });
-
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(fantasy.this, search_discovery.class);
-                startActivity(intent);
-            }
-        });
-
-        moreLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Inflate the layout for the pop-up window
-                View popupView = getLayoutInflater().inflate(R.layout.activity_more, null);
-
-                // Create a new pop-up window
-                PopupWindow popupWindow = new PopupWindow(popupView,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                // Set background drawable with semi-transparent color to create overlay effect
-                Drawable background = new ColorDrawable(Color.BLACK);
-                background.setAlpha(150); // Set alpha (transparency) level (0-255)
-                popupWindow.setBackgroundDrawable(background);
-
-                // Set focusable and outside touchable to true to allow dismissal of the pop-up window when touched outside
-                popupWindow.setFocusable(true);
-                popupWindow.setOutsideTouchable(true);
-
-                // Show the pop-up window at the center of the screen
-                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                String query = searchEditText.getText().toString().trim();
+                if (!TextUtils.isEmpty(query)) {
+                    searchBooks(query);
+                } else {
+                    Toast.makeText(fantasy.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
+                // Navigate to the "three dots" activity
                 Intent intent = new Intent(fantasy.this, search_discovery.class);
                 startActivity(intent);
             }
         });
+
+        threeDotsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to the "three dots" activity
+                Intent intent = new Intent(fantasy.this,three_dots.class);
+                startActivity(intent);
+            }
+        });
+
+        // Set the editor action listener for the search EditText
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == KeyEvent.KEYCODE_ENTER || actionId == KeyEvent.ACTION_DOWN || actionId == KeyEvent.KEYCODE_SEARCH) {
+                String query = searchEditText.getText().toString().trim();
+                if (!TextUtils.isEmpty(query)) {
+                    searchBooks(query);
+                }
+                return true;
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public void onBookClick(Book book) {
+        Intent intent = new Intent(fantasy.this, BookDetails.class);
+        intent.putExtra("BOOK_ID", book.getId());
+        intent.putExtra("BOOK_TITLE", book.getTitle());
+        intent.putExtra("BOOK_AUTHOR", book.getAuthor());
+        intent.putExtra("BOOK_DESCRIPTION", book.getDescription());
+        intent.putExtra("BOOK_PRICE", book.getPrice());
+        intent.putExtra("BOOK_THUMBNAIL", book.getThumbnailUrl());
+        intent.putExtra("BOOK_RATING", book.getRating());
+        startActivity(intent);
+    }
+
+
+    private void retrieveBooks() {
+        db.collection("Fantasy")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            bookList.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String thumbnailUrl = document.getString("thumbnailUrl");
+                                String title = document.getString("title");
+                                String author = document.getString("author");
+                                String description= document.getString("description");
+                                String price = document.getString("price");
+
+                                float rating = 0.0f; // Default value if not found or conversion fails
+                                Object ratingObj = document.get("rating");
+                                if (ratingObj instanceof Double) {
+                                    rating = ((Double) ratingObj).floatValue();
+                                } else if (ratingObj instanceof Float) {
+                                    rating = (Float) ratingObj;
+                                }
+
+                                // Create a Book object and add it to the list
+                                Book book = new Book(id, thumbnailUrl, title, author,description, price, rating);
+                                bookList.add(book);
+                            }
+                            // Notify the adapter that the data set has changed
+                            trendingAdapter.notifyDataSetChanged();
+                        } else {
+                            // Handle errors
+                            // Log the error message
+                            Log.e("FirestoreError", "Error getting books: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void searchBooks(String query) {
+        db.collection("Fantasy")
+                .whereEqualTo("title", query)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        bookList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String id = document.getId();
+                            String thumbnailUrl = document.getString("thumbnailUrl");
+                            String title = document.getString("title");
+                            String author = document.getString("author");
+                            String description= document.getString("description");
+                            String price = document.getString("rating");
+
+                            float rating = 0.0f; // Default value if not found or conversion fails
+                            Object ratingObj = document.get("rating");
+                            if (ratingObj instanceof Double) {
+                                rating = ((Double) ratingObj).floatValue();
+                            } else if (ratingObj instanceof Float) {
+                                rating = (Float) ratingObj;
+                            }
+                            // Create a Book object and add it to the list
+                            Book book = new Book(id, thumbnailUrl, title, author, description, price, rating);
+                            bookList.add(book);
+                        }
+                        // Notify adapter of data change
+                        trendingAdapter.notifyDataSetChanged();
+
+                        // Show/hide messageTextView based on search result
+                        if (bookList.isEmpty()) {
+                            messageTextView.setText("Book not available");
+                            messageTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            messageTextView.setVisibility(View.GONE);
+                        }
+                    } else {
+                        Log.e("FirestoreError", "Error getting documents: ", task.getException());
+                        Toast.makeText(getApplicationContext(), "Error fetching data", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

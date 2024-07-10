@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- Top View (Header) -->
     <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@drawable/cardview_background">
+        android:background="@drawable/cardview_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/backButton"
@@ -15,8 +22,8 @@
             android:layout_height="32dp"
             android:layout_marginStart="1dp"
             android:layout_marginTop="18dp"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/baseline_arrow_back_24" />
+            android:background="@drawable/baseline_arrow_back_24"
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -32,51 +39,119 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="14dp"
+            android:background="@drawable/ic_dot"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/ic_dot" />
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <!-- Scrollable Content -->
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNavigation"
-        android:layout_marginTop="65dp">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
+            <LinearLayout
+                android:id="@+id/searchContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/square2"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/searchEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Search book"
+                    android:inputType="text"
+                    android:paddingStart="6dp"
+                    android:padding="10dp"
+                    android:background="@android:color/transparent"
+                    android:drawablePadding="11dp"/>
+
+                <TextView
+                    android:id="@+id/searchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:drawableStart="@drawable/ic_search"
+                    android:background="@drawable/squareend"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/messageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:visibility="gone"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="6dp"
                 android:background="@color/dark_green"
-                android:text="@string/add_to_favorite_genres"
                 android:gravity="center"
-                android:layout_marginStart="90dp"
-                android:padding="9dp"
+                android:padding="3dp"
+                android:text="@string/add_to_favorite_genres"
                 android:textAllCaps="false"
-                android:textSize="15sp"
-                />
+                android:textSize="12sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="9dp"
+                android:layout_marginTop="12dp"
                 android:alpha="0.7"
                 android:background="@color/black" />
-
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/new_releases"
-                android:textColor="@color/black"
+                android:text="New Releases"
+                android:textColor="@color/warm_orange"
                 android:textStyle="bold"
-                android:layout_marginTop="13dp"
                 android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp">
+
+                    <LinearLayout
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- RecyclerView for trending books -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerComics"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="5dp" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -85,30 +160,80 @@
                 android:layout_marginTop="10dp">
 
                 <LinearLayout
+                    android:id="@+id/row_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <Button
                         android:layout_width="0dp"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:contentDescription="@string/book_listing7"
-                        android:src="@drawable/bk1" />
+                        android:layout_marginEnd="5dp"
+                        android:background="@color/dark_green"
+                        android:text="@string/want_to_read1"
+                        android:textColor="@color/white" />
 
-                    <ImageView
+                    <Button
                         android:layout_width="0dp"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:contentDescription="@string/book_listing8"
-                        android:src="@drawable/bk1" />
+                        android:layout_marginEnd="5dp"
+                        android:background="@color/dark_green"
+                        android:text="@string/want_to_read2"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
 
-                    <ImageView
+                    <Button
                         android:layout_width="0dp"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:contentDescription="@string/book_listing9"
-                        android:src="@drawable/bk1" />
+                        android:layout_marginEnd="5dp"
+                        android:background="@color/dark_green"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:text="Borrow Book" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Popular Now"
+                android:textColor="@color/warm_orange"
+                android:textStyle="bold"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp">
+
+                        <LinearLayout
+                            android:layout_width="390dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <!-- RecyclerView for trending books -->
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerPopular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="5dp" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -118,7 +243,7 @@
                     android:layout_marginTop="10dp">
 
                     <LinearLayout
-                        android:id="@+id/row_1"
+                        android:id="@+id/row_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -129,7 +254,7 @@
                             android:layout_weight="1"
                             android:layout_marginEnd="5dp"
                             android:background="@color/dark_green"
-                            android:text="@string/want_to_read1"
+                            android:text="Borrow Book"
                             android:textAllCaps="false"
                             android:textColor="@color/white" />
 
@@ -139,7 +264,7 @@
                             android:layout_weight="1"
                             android:layout_marginEnd="5dp"
                             android:background="@color/dark_green"
-                            android:text="@string/want_to_read2"
+                            android:text="Borrow Book"
                             android:textAllCaps="false"
                             android:textColor="@color/white" />
 
@@ -153,377 +278,6 @@
                             android:textColor="@color/white"
                             android:text="Borrow Book" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/remaining_rows_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            style="?android:attr/buttonBarStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                style="?android:attr/buttonBarButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read4"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-
-                            <Button
-                                style="?android:attr/buttonBarButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read5"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-
-                            <Button
-                                style="?android:attr/buttonBarButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read6"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/view_all_button1"
-                        android:layout_width="400dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/pale_yellow"
-                        android:text="@string/view_all_1"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textAllCaps="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="9dp"
-                    android:alpha="0.7"
-                    android:background="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Popular Now"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp"
-                    android:textSize="15sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/book_listing7"
-                            android:src="@drawable/engineer" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/book_listing8"
-                            android:src="@drawable/mech" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/book_listing9"
-                            android:src="@drawable/engineer" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="10dp">
-
-                        <LinearLayout
-                            android:id="@+id/row_2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read1"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read2"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white"
-                                android:text="Borrow Book" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/remaining_rows"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <LinearLayout
-                                style="?android:attr/buttonBarStyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <Button
-                                    style="?android:attr/buttonBarButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="5dp"
-                                    android:background="@color/dark_green"
-                                    android:text="@string/want_to_read4"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/white" />
-
-                                <Button
-                                    style="?android:attr/buttonBarButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="5dp"
-                                    android:background="@color/dark_green"
-                                    android:text="@string/want_to_read5"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/white" />
-
-                                <Button
-                                    style="?android:attr/buttonBarButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="5dp"
-                                    android:background="@color/dark_green"
-                                    android:text="@string/want_to_read6"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/white" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/view_all_button01"
-                            android:layout_width="400dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/pale_yellow"
-                            android:text="@string/view_all_1"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:textAllCaps="false" />
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="9dp"
-                    android:alpha="0.7"
-                    android:background="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recently Read"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp"
-                    android:textSize="15sp" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/book_listing7"
-                            android:src="@drawable/engineer" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/book_listing8"
-                            android:src="@drawable/mech" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/book_listing9"
-                            android:src="@drawable/engineer" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="10dp">
-
-                        <LinearLayout
-                            android:id="@+id/row_3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read1"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:text="@string/want_to_read2"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white" />
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/dark_green"
-                                android:textAllCaps="false"
-                                android:textColor="@color/white"
-                                android:text="Borrow Book" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/remaining_rows_02"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <LinearLayout
-                                style="?android:attr/buttonBarStyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <Button
-                                    style="?android:attr/buttonBarButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="5dp"
-                                    android:background="@color/dark_green"
-                                    android:text="@string/want_to_read4"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/white" />
-
-                                <Button
-                                    style="?android:attr/buttonBarButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="5dp"
-                                    android:background="@color/dark_green"
-                                    android:text="@string/want_to_read5"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/white" />
-
-                                <Button
-                                    style="?android:attr/buttonBarButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="5dp"
-                                    android:background="@color/dark_green"
-                                    android:text="@string/want_to_read6"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/white" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/view_all_button003"
-                            android:layout_width="400dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/pale_yellow"
-                            android:text="@string/view_all_1"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:textAllCaps="false" />
-
-                    </LinearLayout>
-
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -534,13 +288,14 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/rectangle_top"
-        android:padding="10dp">
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:id="@+id/homeComics"
+            android:id="@+id/hometech"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -551,6 +306,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_home" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -560,7 +316,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/mybooksComics"
+            android:id="@+id/mybookstech"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -571,6 +327,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_books" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -580,7 +337,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/searchComics"
+            android:id="@+id/searchtech"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -591,6 +348,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_search" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -600,7 +358,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/moreComics"
+            android:id="@+id/moretech"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -611,6 +369,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_more" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -619,4 +378,4 @@
                 android:gravity="center" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

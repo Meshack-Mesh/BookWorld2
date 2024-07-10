@@ -25,10 +25,10 @@ public class LendBookActivity extends AppCompatActivity {
         Button ViewBorrowedBooks = findViewById(R.id.btnViewBorrowedBooks);
 
         // Initialize layouts and button
-        LinearLayout homeLayout = findViewById(R.id.homeart);
-        LinearLayout myBooksLayout = findViewById(R.id.mybooksart);
-        LinearLayout searchLayout = findViewById(R.id.searchart);
-        LinearLayout moreLayout = findViewById(R.id.moreart);
+        LinearLayout homeLayout = findViewById(R.id.homelayout);
+        LinearLayout myBooksLayout = findViewById(R.id.mybookslayout);
+        LinearLayout searchLayout = findViewById(R.id.searchbutton);
+        LinearLayout moreLayout = findViewById(R.id.morelayout);
         ImageView threeDotButton = findViewById(R.id.threeDotButton);
         ImageView backButton = findViewById(R.id.backButton);
         // Ensure this ID matches your XML
@@ -37,7 +37,7 @@ public class LendBookActivity extends AppCompatActivity {
         homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LendBookActivity.this, LendBookActivity.class);
+                Intent intent = new Intent(LendBookActivity.this, Home.class);
                 startActivity(intent);
             }
         });
